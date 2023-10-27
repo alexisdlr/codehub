@@ -3,6 +3,10 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
+import TitleForm from "./_components/TitleForm";
+import DescriptionForm from "./_components/DescriptionForm";
+import ImageForm from "./_components/ImageForm";
+
 const CoursePage = async ({ params }: { params: { courseId: string } }) => {
   const { userId } = auth();
 
@@ -41,9 +45,22 @@ const CoursePage = async ({ params }: { params: { courseId: string } }) => {
         <div>
           <div className="flex items-center gap-x-2">
             <IconBadge icon={LayoutDashboard} />
-            <h1 className="text-xl">Customize your Course</h1>
+            <h2 className="text-xl">Customize your Course</h2>
           </div>
+          <TitleForm 
+            initialData={existingCourse}
+            courseId={existingCourse.id}
+          />
+           <DescriptionForm
+            initialData={existingCourse}
+            courseId={existingCourse.id}
+          />
+           <ImageForm
+            initialData={existingCourse}
+            courseId={existingCourse.id}
+          />
         </div>
+
       </div>
     </div>
   );
