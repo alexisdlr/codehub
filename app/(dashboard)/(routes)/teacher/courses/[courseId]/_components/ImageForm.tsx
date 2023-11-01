@@ -5,20 +5,9 @@ import { toast } from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ImageIcon, Pencil, PlusCircle, X } from "lucide-react";
-
-import {
-  Form,
-  FormControl,
-  FormItem,
-  FormMessage,
-  FormField,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
 import { Course } from "@prisma/client";
 import Image from "next/image";
 import FileUpload from "@/components/FileUpload";
@@ -54,6 +43,7 @@ const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
       toggleEdit();
       router.refresh();
     } catch (error) {
+      toast.remove()
       toast.error("Something went wrong");
     }
   };

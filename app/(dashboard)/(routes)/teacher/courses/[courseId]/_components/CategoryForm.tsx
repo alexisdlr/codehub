@@ -52,6 +52,7 @@ const CategoryForm = ({ initialData, courseId, options }: CategoryFormProps) => 
       toggleEdit();
       router.refresh();
     } catch (error) {
+      toast.remove()
       toast.error("Something went wrong");
     }
   };

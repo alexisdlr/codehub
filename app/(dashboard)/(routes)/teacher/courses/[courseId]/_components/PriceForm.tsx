@@ -14,51 +14,50 @@ import {
   FormMessage,
   FormField,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { formatPrice } from "@/lib/formatPrice";
 
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: "This field is required",
-  }),
+  price: z.coerce.number(),
 });
 
-interface DescriptionFormProps {
-  initialData: Course
+interface PriceFormProps {
+  initialData: Course;
   courseId: string;
 }
 
-const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
+const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
   const router = useRouter();
   const [isEditting, setIsEdittting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData.description || ""
+      price: initialData.price || undefined,
     },
   });
   const toggleEdit = () => setIsEdittting((current) => !current);
   const { isSubmitting, isValid } = form.formState;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      toast.loading('Updating')
+      toast.loading("Updating");
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.remove()
+      toast.remove();
       toast.success("Course Updated!");
       toggleEdit();
       router.refresh();
     } catch (error) {
-      toast.remove()
+      toast.remove();
       toast.error("Something went wrong");
     }
   };
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Description
+        Course Price
         <Button variant={"ghost"} onClick={toggleEdit}>
           {isEditting ? (
             <>
@@ -68,12 +67,21 @@ const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit Description
+              Edit Price
             </>
           )}
         </Button>
       </div>
-      {!isEditting && <p className={cn("text-sm mt-2", !initialData.description && "text-slate-500 italic")}>{initialData.description || "No description"}</p>}
+      {!isEditting && (
+        <p
+          className={cn(
+            "text-sm mt-2",
+            !initialData.price && "text-slate-500 italic"
+          )}
+        >
+          {initialData.price ? formatPrice(initialData.price) : "No price"}
+        </p>
+      )}
       {isEditting && (
         <Form {...form}>
           <form
@@ -82,12 +90,14 @@ const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
           >
             <FormField
               control={form.control}
-              name="description"
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
-                      placeholder="e.g. This course is about..."
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder="Set a price for your course"
                       disabled={isSubmitting}
                       {...field}
                     />
@@ -108,4 +118,4 @@ const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
   );
 };
 
-export default DescriptionForm;
+export default PriceForm;

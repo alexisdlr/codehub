@@ -49,6 +49,7 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
       toggleEdit();
       router.refresh();
     } catch (error) {
+      toast.remove()
       toast.error("Something went wrong");
     }
   };
