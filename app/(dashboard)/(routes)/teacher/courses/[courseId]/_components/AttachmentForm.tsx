@@ -2,14 +2,11 @@
 import * as z from "zod";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { ImageIcon, Pencil, PlusCircle, X } from "lucide-react";
+import { File, Loader2, PlusCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Attachment, Course } from "@prisma/client";
-import Image from "next/image";
 import FileUpload from "@/components/FileUpload";
 
 interface AttachmentFormProps {
@@ -24,7 +21,9 @@ const formSchema = z.object({
 const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) => {
   const router = useRouter();
   const [isEditting, setIsEdittting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const toggleEdit = () => setIsEdittting((current) => !current);
+   
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       toast.loading("Updating");
@@ -38,6 +37,23 @@ const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) => {
       toast.error("Something went wrong");
     }
   };
+
+  const onDelete = async (id: string) => {
+    try {
+      setDeletingId(id)
+      toast.loading("Updating");
+      await axios.delete(`/api/courses/${courseId}/attachments/${id}`)
+      toast.remove();
+      toast.success('Attachment deleted')
+      router.refresh()
+    } catch (error) {
+      toast.remove();
+      toast.error('Something went wrong')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+  
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
@@ -65,6 +81,39 @@ const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) => {
               No attachments yes
             </p>
           )}
+          {
+            initialData.attachments.length > 0 && (
+              <div className="space-y-2">
+                {
+                  initialData.attachments.map(attachment => (
+                    <div 
+                      key={attachment.id}
+                      className="flex items-center p-3 w-full bg-sky-100 border-sky-200 border text-sky-700 rounded-md"
+                    >
+                      <File className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <p className="text-xs line-clamp-1">
+                        {attachment.name}
+                      </p>
+                      {
+                        deletingId === attachment.id && (
+                          <div className="ml-auto">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          </div>
+                        )
+                      }
+                       {
+                        deletingId !== attachment.id && (
+                          <button onClick={() => onDelete(attachment.id)} className='ml-auto hover:opacity-75 transition'>
+                            <X className="h-4 w-4 " />
+                          </button>
+                        )
+                      }
+                    </div>
+                  ))
+                }
+              </div>
+            )
+          }
         </>
       )}
 
