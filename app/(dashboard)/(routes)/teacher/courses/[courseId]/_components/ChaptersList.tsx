@@ -1,8 +1,9 @@
+"use client"
 import { Chapter } from "@prisma/client"
 
 interface ChaptersListProps {
-  onEdit: () => void
-  onReorder: () => void
+  onEdit: (id: string) => void
+  onReorder: (updateData: {id: string, position: number}[]) => void
   items: Chapter[]
 }
 export default function ChaptersList({
