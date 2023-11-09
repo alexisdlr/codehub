@@ -57,6 +57,19 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
       toast.error("Something went wrong");
     }
   };
+  const onReorder = async (updateData: {id: string, position: number}[]) => {
+    try {
+      setIsUpdating(true)
+      toast.loading("Reording");
+      await axios.put(`/api/courses/${courseId}/chapters/reorder`,{
+        list: updateData
+      })
+      toast.remove();
+      toast.success("Reordered!");
+    } catch (error) {
+      toast.error('Something went wrong')
+    }
+  }
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
@@ -113,7 +126,7 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
           )}
         >
           {!initialData.chapters.length && "No chapters"}
-          <ChaptersList onEdit={() => {}} onReorder={() => {}} items={initialData.chapters || []} />
+          <ChaptersList onEdit={() => {}} onReorder={onReorder} items={initialData.chapters || []} />
         </div>
       )}
       {!isCreating && (

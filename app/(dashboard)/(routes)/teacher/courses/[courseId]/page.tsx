@@ -54,6 +54,7 @@ const CoursePage = async ({ params }: { params: { courseId: string } }) => {
     existingCourse.categoryId,
     existingCourse.imageUrl,
     existingCourse.price,
+    existingCourse.chapters.some(chapter => chapter.isPublished)
   ];
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
