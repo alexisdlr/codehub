@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { PlusCircle, X } from "lucide-react";
+import { Loader2, PlusCircle, X } from "lucide-react";
 import { Chapter, Course } from "@prisma/client";
 
 import {
@@ -66,12 +66,23 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
       })
       toast.remove();
       toast.success("Reordered!");
+      setIsUpdating(false)
     } catch (error) {
       toast.error('Something went wrong')
     }
   }
+  const onEdit = (id: string) => {
+    router.push(`/teacher/courses/${courseId}/chapters/${id}`)
+  }
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
+    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+      {
+        isUpdating && (
+          <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-md flex items-center justify-center">
+            <Loader2 className="animate-spin h-6 w-6 text-sky-500" />
+          </div>
+        )
+      }
       <div className="font-medium flex items-center justify-between">
         Course Chapters
         <Button variant={"ghost"} onClick={toggleCreating}>
@@ -126,7 +137,7 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
           )}
         >
           {!initialData.chapters.length && "No chapters"}
-          <ChaptersList onEdit={() => {}} onReorder={onReorder} items={initialData.chapters || []} />
+          <ChaptersList onEdit={onEdit} onReorder={onReorder} items={initialData.chapters || []} />
         </div>
       )}
       {!isCreating && (
