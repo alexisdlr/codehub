@@ -1,4 +1,5 @@
 "use client";
+import MuxPlayer from '@mux/mux-player-react'
 import * as z from "zod";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -79,7 +80,7 @@ const VideoForm = ({ initialData, courseId, chapterId}: VideoFormProps) => {
           </div>
         ) : (
           <div className="aspect-video relative mt-1">
-            Video uploaded
+            <MuxPlayer playbackId={initialData.muxData?.playbackId || ''} />
           </div>
         ))}
 

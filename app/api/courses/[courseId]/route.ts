@@ -4,6 +4,13 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { isTeacher } from "@/lib/teacher";
 
+export async function DELETE (
+  req: Request,
+  {params}: {params: {courseId: string}}
+) {
+  
+}
+
 export async function PATCH(
   req: Request,
  { params }: { params: { courseId: string } }

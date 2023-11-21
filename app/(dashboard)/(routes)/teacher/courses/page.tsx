@@ -12,8 +12,16 @@ const CoursesPage = async () => {
   }
   const coursesByUser = await db.course.findMany({
     where: {
-    userId,
+      userId,
     },
+    include: {
+      chapters: {
+        orderBy: {
+          position: "asc",
+        },
+      },
+    }
+    
   });
   return (
     <div className="p-6">
