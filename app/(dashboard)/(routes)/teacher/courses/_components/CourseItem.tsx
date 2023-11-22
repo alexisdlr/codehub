@@ -1,50 +1,48 @@
-"use client"
-import IconButton from "@/components/IconButton"
-import { cn } from "@/lib/utils"
-import { Chapter, Course } from "@prisma/client"
-import { Pencil, X } from "lucide-react"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import axios from 'axios'
-import toast from "react-hot-toast"
+"use client";
+import IconButton from "@/components/IconButton";
+import { cn } from "@/lib/utils";
+import { Chapter, Course } from "@prisma/client";
+import { Pencil, X } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { Badge } from "@/components/ui/badge";
 
 interface CourseItemProps {
-  item: Course & {chapters: Chapter[]}
+  item: Course & { chapters: Chapter[] };
 }
-export default function CourseItem({item}: CourseItemProps ) {
+export default function CourseItem({ item }: CourseItemProps) {
   const router = useRouter();
   const handleClick = () => {
     router.push(`/teacher/courses/${item.id}`);
   };
   const handleDelete = async () => {
     try {
-      toast.loading('Deleting')
-      await axios.delete(`/api/courses/${item.id}`)
-      toast.remove()
-      toast.success('Course deleted')
+      toast.loading("Deleting");
+      await axios.delete(`/api/courses/${item.id}`);
+      toast.remove();
+      toast.success("Course deleted");
     } catch (error) {
-      toast.error('Something went wrong')
+      toast.error("Something went wrong");
     }
-
-  }
+  };
   return (
     <div className="bg-white border group cursor-pointer rounded-xl p-3 space-y-4">
-          <div className="aspect-square rounded-xl bg-gray-100 relative">
+      <div className="aspect-square rounded-xl bg-gray-100 relative">
+        <Badge className={cn("bg-slate-700 absolute top-2 right-2", item.isPublished && "bg-sky-700")}>
+          {item.isPublished ? "Published" : "Draft"}
+        </Badge>
         <Image
-          src={item.imageUrl || ''}
+          src={item.imageUrl || ""}
           fill
           alt="course"
           className="aspect-square object-contain rounded-md "
         />
         <div className="opacity-0 group-hover:opacity-100 w-full px-6 absolute bottom-5 transition">
           <div className="flex gap-x-6 justify-center">
-          <IconButton
-              icon={
-                <Pencil
-                  size={20}
-                  className="text-gray-600"
-                />
-              }
+            <IconButton
+              icon={<Pencil size={20} className="text-gray-600" />}
               onClick={handleClick}
             />
             <IconButton
@@ -56,9 +54,36 @@ export default function CourseItem({item}: CourseItemProps ) {
       </div>
       <div className="flex flex-col gap-y-2">
         <p className="font-semibold text-md">{item.title}</p>
-        <p className={cn('mt-2 text-sm text-gray-500 truncate', !item.description && 'italic')}>{item.description || 'No description'}</p>
-        <p className={cn('mt-2 text-sm justify-self-end text-gray-500 truncate', !item.chapters && 'italic')}>{item.chapters.length ? `${item.chapters.length} Chapters` : 'No Chapters'}</p>
+        <p
+          className={cn(
+            "mt-2 text-sm text-gray-500 truncate",
+            !item.description && "italic"
+          )}
+        >
+          {item.description || "No description"}
+        </p>
+        <div className="flex justify-between">
+          <p
+            className={cn(
+              "mt-2 text-sm justify-self-end text-gray-500 truncate",
+              !item.chapters && "italic"
+            )}
+          >
+            {item.chapters.length
+              ? `${item.chapters.length} Chapters`
+              : "No Chapters"}
+          </p>
+          <p
+            className={cn(
+              "mt-2 text-sm justify-self-end text-gray-800 truncate",
+              !item.price && "italic"
+            )}
+          >
+            {" "}
+            {`$${item.price}` || "No price"}
+          </p>
+        </div>
       </div>
     </div>
-  )
+  );
 }
