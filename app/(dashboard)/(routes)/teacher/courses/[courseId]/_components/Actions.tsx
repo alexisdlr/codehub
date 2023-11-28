@@ -2,39 +2,39 @@
 
 import { ConfirmModal } from "@/components/modals/ConfirmModal";
 import { Button } from "@/components/ui/button";
+import { useConfettiStore } from "@/hooks/use-confetti-store";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-interface ChapterActionsProps {
+interface ActionsProps {
   disabled: boolean;
   isPublished: boolean;
   courseId: string;
-  chapterId: string;
 }
-const ChapterActions = ({
+const Actions = ({
   isPublished,
   disabled,
   courseId,
-  chapterId,
-}: ChapterActionsProps) => {
+}: ActionsProps) => {
+  const confetti = useConfettiStore()
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter()
-
   const onPublish = async () => {
     try {
       setIsLoading(true);
-      toast.loading("Publishing");
+      toast.loading("Updating...");
       if(isPublished) {
-        await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`);
+        await axios.patch(`/api/courses/${courseId}/unpublish`);
         toast.remove();
         toast.success("Chapter Unpublished!");
       } else {
-        await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
+        await axios.patch(`/api/courses/${courseId}/publish`);
         toast.remove();
         toast.success("Chapter Published!");
+        confetti.onOpen()
       }
       router.refresh()
     } catch (error) {
@@ -47,7 +47,7 @@ const ChapterActions = ({
     try {
       setIsLoading(true);
       toast.loading("deleting");
-      await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`);
+      await axios.delete(`/api/courses/${courseId}`);
       toast.remove();
       toast.success("Chapter Deleted!");
       router.push(`/teacher/courses/${courseId}`)
@@ -72,4 +72,4 @@ const ChapterActions = ({
   );
 };
 
-export default ChapterActions;
+export default Actions;

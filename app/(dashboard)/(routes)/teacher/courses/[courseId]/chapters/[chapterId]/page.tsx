@@ -10,6 +10,7 @@ import AccessForm from "./_components/AccessForm";
 import VideoForm from "./_components/VideoForm";
 import Banner from "@/components/Banner";
 import ChapterActions from "./_components/ChapterActions";
+
 interface ChapterPageProps {
   params: { chapterId: string; courseId: string };
 }
