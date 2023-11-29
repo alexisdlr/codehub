@@ -1,7 +1,7 @@
 "use client";
 import IconButton from "@/components/IconButton";
 import { cn } from "@/lib/utils";
-import { Chapter, Course } from "@prisma/client";
+import { Category, Chapter, Course } from "@prisma/client";
 import { Pencil, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -9,9 +9,11 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 
+
 interface CourseItemProps {
-  item: Course & { chapters: Chapter[] };
+  item: (Course & { chapters: Chapter[] }) ;
 }
+
 export default function CourseItem({ item }: CourseItemProps) {
   const router = useRouter();
   const handleClick = () => {

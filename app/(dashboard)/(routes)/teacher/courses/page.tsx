@@ -15,8 +15,8 @@ const CoursesPage = async () => {
       userId,
     },
     orderBy: {
-      createdAt: 'desc'
-    },    
+      createdAt: "desc",
+    },
     include: {
       chapters: {
         orderBy: {
@@ -25,7 +25,7 @@ const CoursesPage = async () => {
       },
     },
   });
-  
+
   return (
     <div className="p-6">
       <div className="flex items-start">
@@ -33,12 +33,13 @@ const CoursesPage = async () => {
           <h2 className="text-slate-800 text-4xl font-bold">Welcome Teacher</h2>
           <p className="mt-2">Create a course or manage them</p>
         </div>
-       
       </div>
       <CoursesList items={coursesByUser} />
       <div className="my-10">
         <div>
-          <h2 className="text-slate-800 text-4xl font-bold mb-3">Manage your Courses</h2>
+          <h2 className="text-slate-800 text-4xl font-bold mb-3">
+            Manage your Courses
+          </h2>
         </div>
         <DataTable columns={columns} data={coursesByUser} />
       </div>

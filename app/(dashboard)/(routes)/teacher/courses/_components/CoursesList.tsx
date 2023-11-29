@@ -1,8 +1,8 @@
-import { Chapter, Course } from "@prisma/client"
+import { Category, Chapter, Course } from "@prisma/client"
 import CourseItem from "./CourseItem"
 
 interface CoursesListProps {
-  items: (Course & { chapters: Chapter[] })[]
+  items: (Course & { chapters: Chapter[] })[] ;
 }
 
 export default function CoursesList({items}: CoursesListProps) {
