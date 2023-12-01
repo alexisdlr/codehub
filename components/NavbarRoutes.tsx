@@ -9,34 +9,32 @@ const NavbarRoutes = () => {
   const pathname = usePathname();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
-  const isPlayerPage = pathname?.includes("/chapter");
-  const isSearchPage = pathname === '/search'
+  const isPlayerPage = pathname?.includes("/courses");
+  const isSearchPage = pathname === "/search";
   return (
     <>
-    {
-      isSearchPage && (
+      {isSearchPage && (
         <div className="hidden md:block">
           <SearchInput />
         </div>
-      )
-    }
-      <div className="flex ml-auto gap-x-2">
-      {isTeacherPage || isPlayerPage ? (
-        <Link href="/">
-          <Button variant="ghost" size={"sm"}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Exit
-          </Button>
-        </Link>
-      ) : (
-        <Link href="/teacher/courses">
-          <Button variant="ghost" size={"sm"}>
-            Teacher mode
-          </Button>
-        </Link>
       )}
-      <UserButton afterSignOutUrl="/" />
-    </div>
+      <div className="flex ml-auto gap-x-2">
+        {isTeacherPage || isPlayerPage ? (
+          <Link href="/">
+            <Button variant="ghost" size={"sm"}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Exit
+            </Button>
+          </Link>
+        ) : (
+          <Link href="/teacher/courses">
+            <Button variant="ghost" size={"sm"}>
+              Teacher mode
+            </Button>
+          </Link>
+        )}
+        <UserButton afterSignOutUrl="/" />
+      </div>
     </>
   );
 };
