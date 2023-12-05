@@ -3,6 +3,7 @@ import Banner from "@/components/Banner";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { VideoPlayer } from "./_components/VideoPlayer";
+import { CourseEnrollButton } from "./_components/CourseEnrrollButton";
 
 const ChapterPage = async ({
   params,
@@ -27,7 +28,7 @@ const ChapterPage = async ({
     chapterId: params.chapterId,
   });
 
-  if (!chapter || !course || !nextChapter) return redirect("/");
+  if (!chapter || !course ) return redirect("/");
 
   const isLocked = !chapter.isFree && !purchase;
   const completeOnEnd = !!purchase && !userProgress?.isCompleted;
@@ -51,11 +52,20 @@ const ChapterPage = async ({
             chapterId={chapter.id}
             title={chapter.title}
             courseId={params.courseId}
-            nextChapterId={nextChapter.id}
+            nextChapterId={nextChapter?.id}
             isLocked={isLocked}
             completeOnEnd={completeOnEnd}
             playbackId={muxData?.playbackId!}
           />
+        </div>
+        <div className="p-4 flex items-center justify-between flex-col md:flex-row">
+          <h2 className="text-2xl font-semibold">{chapter.title}</h2>
+          {
+            purchase ? (
+              //TODO: COURSE PROGRESSS BUTTON
+              <p>purchased</p>
+              ) : (<CourseEnrollButton price={course.price!} courseId={params.courseId} />)
+          }
         </div>
       </div>
     </div>
